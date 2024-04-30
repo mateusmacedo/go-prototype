@@ -1,18 +1,19 @@
 package service
 
 import (
+	"github.com/mateusmacedo/govibranium/prototype/internal/application/contract"
 	"github.com/mateusmacedo/govibranium/prototype/internal/core/validation"
 )
 
-type OSFileSource struct {
+type OSFilePathSource struct {
 	path string
 	validators []validation.Validator
 }
 
-type OSFileSourceOption func(*OSFileSource) error
+type OSFileSourceOption func(*OSFilePathSource) error
 
-func OSFileSourceOptionsFunc(opts ...OSFileSourceOption) *OSFileSource {
-	s := &OSFileSource{}
+func OSFileSourceOptionsFunc(opts ...OSFileSourceOption) *OSFilePathSource {
+	s := &OSFilePathSource{}
 	for _, opt := range opts {
 		opt(s)
 	}
@@ -20,20 +21,20 @@ func OSFileSourceOptionsFunc(opts ...OSFileSourceOption) *OSFileSource {
 }
 
 func WithOSFileSourcePath(path string) OSFileSourceOption {
-	return func(s *OSFileSource) error {
+	return func(s *OSFilePathSource) error {
 		s.path = path
 		return nil
 	}
 }
 
 func WithOSFileSourceValidators(validators ...validation.Validator) OSFileSourceOption {
-	return func(s *OSFileSource) error {
+	return func(s *OSFilePathSource) error {
 		s.validators = validators
 		return nil
 	}
 }
 
-func NewOSFileSource(opts ...OSFileSourceOption) (*OSFileSource, error) {
+func NewOSFileSource(opts ...OSFileSourceOption) (contract.Source, error) {
 	s := OSFileSourceOptionsFunc(opts...)
 	for _, v := range s.validators {
 		if err := v.Validate(s.path); err != nil {
@@ -41,6 +42,10 @@ func NewOSFileSource(opts ...OSFileSourceOption) (*OSFileSource, error) {
 		}
 	}
 	return s, nil
+}
+
+func (s *OSFilePathSource) Open() (interface{}, error) {
+	return s.path, nil
 }
 
 const (

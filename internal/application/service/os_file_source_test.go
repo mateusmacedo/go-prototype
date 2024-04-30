@@ -16,8 +16,12 @@ func TestOSFileSource(t *testing.T) {
 			if err != nil {
 				t.Errorf("Expected no error, got %s", err)
 			}
-			if s.path != "test" {
-				t.Errorf("Expected path to be test, got %s", s.path)
+			if path, err := s.Open(); err != nil {
+				t.Errorf("Expected no error, got %s", err)
+			} else {
+				if path.(string) != "test" {
+					t.Errorf("Expected path to be test, got %s", path)
+				}
 			}
 		})
 		t.Run("Test NewOSFileSource with invalid path", func(t *testing.T) {
