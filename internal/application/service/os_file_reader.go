@@ -1,11 +1,22 @@
 package service
 
-import "github.com/mateusmacedo/govibranium/prototype/internal/application/contract"
+import (
+	"github.com/mateusmacedo/govibranium/prototype/internal/application/contract"
+)
 
 type OSFileReader struct {
+	adapter contract.Reader
 }
 
 type OSFileReaderOption func(*OSFileReader) error
+
+
+func WithOSFileReaderAdapter(adapter contract.Reader) OSFileReaderOption {
+	return func(s *OSFileReader) error {
+		s.adapter = adapter
+		return nil
+	}
+}
 
 func OSFileReaderOptionsFunc(opts ...OSFileReaderOption) *OSFileReader {
 	s := &OSFileReader{}
@@ -15,14 +26,10 @@ func OSFileReaderOptionsFunc(opts ...OSFileReaderOption) *OSFileReader {
 	return s
 }
 
-func NewOSFileReader(opts ...OSFileReaderOption) contract.SourceReader {
+func NewOSFileReader(opts ...OSFileReaderOption) contract.Reader {
 	return OSFileReaderOptionsFunc(opts...)
 }
 
 func (s *OSFileReader) Read(source contract.Source) (interface{}, error) {
-	_, err := source.Open()
-	if err != nil {
-		return nil, err
-	}
-	return nil, nil
+	return s.adapter.Read(source)
 }
