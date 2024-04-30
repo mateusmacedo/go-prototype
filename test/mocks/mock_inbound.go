@@ -8,6 +8,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+
 	contract "github.com/mateusmacedo/govibranium/prototype/internal/application/contract"
 )
 
@@ -49,31 +50,31 @@ func (mr *MockSourceMockRecorder) Open() *gomock.Call {
 	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Open", reflect.TypeOf((*MockSource)(nil).Open))
 }
 
-// MockSourceReader is a mock of SourceReader interface.
-type MockSourceReader struct {
+// MockReader is a mock of SourceReader interface.
+type MockReader struct {
 	ctrl     *gomock.Controller
-	recorder *MockSourceReaderMockRecorder
+	recorder *MockReaderMockRecorder
 }
 
-// MockSourceReaderMockRecorder is the mock recorder for MockSourceReader.
-type MockSourceReaderMockRecorder struct {
-	mock *MockSourceReader
+// MockReaderMockRecorder is the mock recorder for MockSourceReader.
+type MockReaderMockRecorder struct {
+	mock *MockReader
 }
 
-// NewMockSourceReader creates a new mock instance.
-func NewMockSourceReader(ctrl *gomock.Controller) *MockSourceReader {
-	mock := &MockSourceReader{ctrl: ctrl}
-	mock.recorder = &MockSourceReaderMockRecorder{mock}
+// NewMockReader creates a new mock instance.
+func NewMockReader(ctrl *gomock.Controller) *MockReader {
+	mock := &MockReader{ctrl: ctrl}
+	mock.recorder = &MockReaderMockRecorder{mock}
 	return mock
 }
 
 // EXPECT returns an object that allows the caller to indicate expected use.
-func (m *MockSourceReader) EXPECT() *MockSourceReaderMockRecorder {
+func (m *MockReader) EXPECT() *MockReaderMockRecorder {
 	return m.recorder
 }
 
 // Read mocks base method.
-func (m *MockSourceReader) Read(s contract.Source) (interface{}, error) {
+func (m *MockReader) Read(s contract.Source) (interface{}, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "Read", s)
 	ret0, _ := ret[0].(interface{})
@@ -82,7 +83,7 @@ func (m *MockSourceReader) Read(s contract.Source) (interface{}, error) {
 }
 
 // Read indicates an expected call of Read.
-func (mr *MockSourceReaderMockRecorder) Read(s interface{}) *gomock.Call {
+func (mr *MockReaderMockRecorder) Read(s interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Read", reflect.TypeOf((*MockSourceReader)(nil).Read), s)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Read", reflect.TypeOf((*MockReader)(nil).Read), s)
 }
