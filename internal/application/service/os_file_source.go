@@ -42,3 +42,7 @@ func NewOSFileSource(opts ...OSFileSourceOption) (*OSFileSource, error) {
 	}
 	return s, nil
 }
+
+const (
+	InvalidOSFileSourcePathErrMsg = "the path %s is invalid"
+)

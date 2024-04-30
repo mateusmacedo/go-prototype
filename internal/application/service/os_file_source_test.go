@@ -1,11 +1,11 @@
 package service
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 
+	"github.com/mateusmacedo/govibranium/prototype/internal/core/err"
 	"github.com/mateusmacedo/govibranium/prototype/test/mocks"
 )
 
@@ -24,7 +24,8 @@ func TestOSFileSource(t *testing.T) {
 			ctrl := gomock.NewController(t)
     		defer ctrl.Finish()
 			mockValidator := mocks.NewMockValidator(ctrl)
-			mockValidator.EXPECT().Validate("test").Return(fmt.Errorf("error"))
+			expectedErr := err.ErrorFactory(InvalidOSFileSourcePathErrMsg, "test")
+			mockValidator.EXPECT().Validate("test").Return(expectedErr)
 			_, err := NewOSFileSource(
 				WithOSFileSourcePath("test"),
 				WithOSFileSourceValidators(mockValidator),
@@ -32,8 +33,8 @@ func TestOSFileSource(t *testing.T) {
 			if err == nil {
 				t.Error("Expected error, got nil")
 			}
-			if err.Error() != "error" {
-				t.Errorf("Expected error to be error, got %s", err.Error())
+			if err.Error() != expectedErr.Error() {
+				t.Errorf("Expected error to be %s, got %s", expectedErr, err)
 			}
 		})
 	})
