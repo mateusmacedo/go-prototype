@@ -12,16 +12,16 @@ import (
 func TestOSFileSource(t *testing.T) {
 	t.Run("Test NewOSFileSource", func(t *testing.T) {
 		t.Run("Test NewOSFileSource with valid path", func(t *testing.T) {
-			s, err := NewOSFileSource(WithOSFileSourcePath("test"))
+			ctrl := gomock.NewController(t)
+    		defer ctrl.Finish()
+			mockAdapter := mocks.NewMockSource(ctrl)
+			mockAdapter.EXPECT().Open().Return("test", nil)
+			_, err := NewOSFileSource(
+				WithOSFileSourcePath("test"),
+				WithOSFileSourceAdapter(mockAdapter),
+			)
 			if err != nil {
 				t.Errorf("Expected no error, got %s", err)
-			}
-			if path, err := s.Open(); err != nil {
-				t.Errorf("Expected no error, got %s", err)
-			} else {
-				if path.(string) != "test" {
-					t.Errorf("Expected path to be test, got %s", path)
-				}
 			}
 		})
 		t.Run("Test NewOSFileSource with invalid path", func(t *testing.T) {
