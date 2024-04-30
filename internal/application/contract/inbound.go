@@ -4,6 +4,6 @@ type Source interface {
 	Open() (interface{}, error)
 }
 
-type SourceReader interface {
+type Reader interface {
 	Read(s Source) (interface{}, error)
 }
