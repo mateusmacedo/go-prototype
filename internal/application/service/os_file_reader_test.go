@@ -18,7 +18,7 @@ func TestOSFileReader(t *testing.T) {
 		}
 	})
 	t.Run("Test OSFileReader Read", func(t *testing.T) {
-		t.Run("Test OSFileReader Read with valid source", func(tr *testing.T) {
+		t.Run("Test OSFileReader Read from valid source", func(tr *testing.T) {
 			ctrl := gomock.NewController(tr)
 			defer ctrl.Finish()
 			mockSource := mocks.NewMockSource(ctrl)
@@ -30,7 +30,7 @@ func TestOSFileReader(t *testing.T) {
 				tr.Errorf("Expected no error, got %s", err)
 			}
 		})
-		t.Run("Test OSFileReader Read with invalid source", func(tr *testing.T) {
+		t.Run("Test OSFileReader Read from invalid source", func(tr *testing.T) {
 			ctrl := gomock.NewController(tr)
 			defer ctrl.Finish()
 			mockSource := mocks.NewMockSource(ctrl)
