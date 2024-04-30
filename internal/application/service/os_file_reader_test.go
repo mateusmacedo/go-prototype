@@ -1,11 +1,11 @@
 package service
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/golang/mock/gomock"
 
+	"github.com/mateusmacedo/govibranium/prototype/internal/core/err"
 	"github.com/mateusmacedo/govibranium/prototype/test/mocks"
 )
 
@@ -22,26 +22,49 @@ func TestOSFileReader(t *testing.T) {
 			ctrl := gomock.NewController(tr)
 			defer ctrl.Finish()
 			mockSource := mocks.NewMockSource(ctrl)
-			mockSource.EXPECT().Open().Return(nil, nil)
-			r := NewOSFileReader()
+			expRead := "test"
+			mockReader := mocks.NewMockReader(ctrl)
+			mockReader.EXPECT().Read(mockSource).Return(expRead, nil)
 
-			_, err := r.Read(mockSource)
+			r := NewOSFileReader(
+				WithOSFileReaderAdapter(mockReader),
+			)
+
+			d, err := r.Read(mockSource)
+
 			if err != nil {
 				tr.Errorf("Expected no error, got %s", err)
+			}
+
+			if d != expRead {
+				tr.Errorf("Expected %s, got %s", expRead, d)
 			}
 		})
 		t.Run("Test OSFileReader Read from invalid source", func(tr *testing.T) {
 			ctrl := gomock.NewController(tr)
 			defer ctrl.Finish()
 			mockSource := mocks.NewMockSource(ctrl)
-			expectedErr := fmt.Errorf("error")
-			mockSource.EXPECT().Open().Return(nil, expectedErr)
-			r := NewOSFileReader()
+			expRead := interface{}(nil)
+			expReadErr := err.ErrorFactory("error %s", "test")
+			mockReader := mocks.NewMockReader(ctrl)
+			mockReader.EXPECT().Read(mockSource).Return(expRead, expReadErr)
 
-			_, err := r.Read(mockSource)
+			r := NewOSFileReader(
+				WithOSFileReaderAdapter(mockReader),
+			)
+
+			d, err := r.Read(mockSource)
 
 			if err == nil {
-				tr.Errorf("Expected error to be %s, got nil", expectedErr)
+				tr.Error("Expected error, got nil")
+			}
+
+			if err.Error() != expReadErr.Error() {
+				tr.Errorf("Expected %s, got %s", expReadErr, err)
+			}
+
+			if d != expRead {
+				tr.Errorf("Expected %v, got %v", expRead, d)
 			}
 		})
 	})
