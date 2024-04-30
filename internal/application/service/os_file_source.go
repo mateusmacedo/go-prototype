@@ -1,19 +1,27 @@
 package service
 
-import (
-	"fmt"
-
-	"github.com/mateusmacedo/govibranium/prototype/internal/application/contract"
-)
-
 type OSFileSource struct {
 	path string
 }
 
-func NewOSFileSource(path string) contract.Source {
-	return &OSFileSource{path: path}
+type OSFileSourceOption func(*OSFileSource) error
+
+func OSFileSourceOptionsFunc(opts ...OSFileSourceOption) *OSFileSource {
+	s := &OSFileSource{}
+	for _, opt := range opts {
+		opt(s)
+	}
+	return s
 }
 
-func (s *OSFileSource) Open() (interface{}, error) {
-	return nil, fmt.Errorf("not implemented")
+func WithOSFileSourcePath(path string) OSFileSourceOption {
+	return func(s *OSFileSource) error {
+		s.path = path
+		return nil
+	}
+}
+
+func NewOSFileSource(opts ...OSFileSourceOption) (*OSFileSource, error) {
+	s := OSFileSourceOptionsFunc(opts...)
+	return s, nil
 }
