@@ -2,13 +2,14 @@ package service
 
 import (
 	"github.com/mateusmacedo/govibranium/prototype/internal/application/contract"
+	"github.com/mateusmacedo/govibranium/prototype/internal/core/helper"
 	"github.com/mateusmacedo/govibranium/prototype/internal/core/validation"
 )
 
 type OSFileSource struct {
 	path string
 	validators []validation.Validator
-	adapter contract.Source
+	adapter helper.Adapter
 }
 
 type OSFileSourceOption func(*OSFileSource) error
@@ -35,7 +36,7 @@ func WithOSFileSourceValidators(validators ...validation.Validator) OSFileSource
 	}
 }
 
-func WithOSFileSourceAdapter(adapter contract.Source) OSFileSourceOption {
+func WithOSFileSourceAdapter(adapter helper.Adapter) OSFileSourceOption {
 	return func(s *OSFileSource) error {
 		s.adapter = adapter
 		return nil
@@ -53,7 +54,7 @@ func NewOSFileSource(opts ...OSFileSourceOption) (contract.Source, error) {
 }
 
 func (s *OSFileSource) Open() (interface{}, error) {
-	file, err := s.adapter.Open()
+	file, err := s.adapter.Adapt(s.path)
     if err != nil {
         return nil, err
     }
