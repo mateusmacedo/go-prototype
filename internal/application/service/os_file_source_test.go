@@ -17,7 +17,7 @@ func TestOSFileSource(t *testing.T) {
 			expValidate := interface{}(nil)
 			mockValidator := mocks.NewMockValidator(ctrl)
 			mockValidator.EXPECT().Validate("test").Return(expValidate)
-			mockAdapter := mocks.NewMockSource(ctrl)
+			mockAdapter := mocks.NewMockAdapter(ctrl)
 			_, err := NewOSFileSource(
 				WithOSFileSourcePath("test"),
 				WithOSFileSourceValidators(mockValidator),
@@ -33,7 +33,7 @@ func TestOSFileSource(t *testing.T) {
 			expValidate := err.ErrorFactory(InvalidOSFileSourcePathErrMsg, "test")
 			mockValidator := mocks.NewMockValidator(ctrl)
 			mockValidator.EXPECT().Validate("test").Return(expValidate)
-			mockAdapter := mocks.NewMockSource(ctrl)
+			mockAdapter := mocks.NewMockAdapter(ctrl)
 			_, err := NewOSFileSource(
 				WithOSFileSourcePath("test"),
 				WithOSFileSourceValidators(mockValidator),
@@ -55,8 +55,8 @@ func TestOSFileSource(t *testing.T) {
 			mockValidator := mocks.NewMockValidator(ctrl)
 			mockValidator.EXPECT().Validate("test").Return(expValidate)
 			expOpen := interface{}(nil)
-			mockAdapter := mocks.NewMockSource(ctrl)
-			mockAdapter.EXPECT().Open().Return(nil, expOpen)
+			mockAdapter := mocks.NewMockAdapter(ctrl)
+			mockAdapter.EXPECT().Adapt("test").Return(nil, expOpen)
 			s, err := NewOSFileSource(
 				WithOSFileSourcePath("test"),
 				WithOSFileSourceValidators(mockValidator),
@@ -82,8 +82,8 @@ func TestOSFileSource(t *testing.T) {
 			mockValidator := mocks.NewMockValidator(ctrl)
 			mockValidator.EXPECT().Validate("test").Return(expValidate)
 			expOpen := err.ErrorFactory("error %s", "test")
-			mockAdapter := mocks.NewMockSource(ctrl)
-			mockAdapter.EXPECT().Open().Return(nil, expOpen)
+			mockAdapter := mocks.NewMockAdapter(ctrl)
+			mockAdapter.EXPECT().Adapt("test").Return(nil, expOpen)
 			s, err := NewOSFileSource(
 				WithOSFileSourcePath("test"),
 				WithOSFileSourceValidators(mockValidator),
